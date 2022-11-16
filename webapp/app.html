@@ -22,7 +22,8 @@
   <script src="https://unpkg.com/react@17.0.1/umd/react.development.js"></script>
   <script src="https://unpkg.com/react-dom@17.0.1/umd/react-dom.development.js"></script>
   <script src="./components/button.js"></script>
-  <title>Hackyeah demo app</title>
+  <script src="./components/map.js"></script>
+  <title>Any layout</title>
   <style>
     * {
       box-sizing: border-box;
@@ -44,10 +45,12 @@
   <script>
     const {
       Button,
+      MyMap,
     } = window
     window.renderApp = (App) => {
       const app = React.createElement(App, {React, ReactDOM,
         Button,
+        MyMap,
       })
       const el = document.getElementById('app')
       ReactDOM.render(app, el);
@@ -62,6 +65,7 @@
           <button onClick={() => setValue(i => i + 1)}>{value}</button>
         </div>
         <Button React={React}/>
+        <MyMap React={React}/>
       </>
     }
     window.renderApp(App)
