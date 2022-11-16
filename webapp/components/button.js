@@ -1,3 +1,5 @@
 window.Button = ({React}) => {
-  return React.createElement('button', {}, 'click me')
+  const [value, setValue] = React.useState(1)
+  const props = {onClick: () => setValue(i => i + 1)}
+  return React.createElement('button', {...props}, ['click me ', value])
 }
