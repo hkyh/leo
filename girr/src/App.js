@@ -76,7 +76,7 @@ function Panel({children, state, status, end, setEnd}) {
       <input ref={inp2} class="range range--jedzenie" type="range" id="temp2" name="temp" list="tickmarks"
         value={food} onInput={handleSlider(setFood)}
         style={{background: `linear-gradient(to right, green 0%, #fff ${food}%`}} />
-      <label htmlFor="temp3">odporność na glód</label>{resistance}
+      <label htmlFor="temp3">odporność na głód</label>
       <input ref={inp3} class="range range--odpornosc" type="range" id="temp3" name="temp" list="tickmarks"
         value={resistance} onInput={handleSlider(setResistance)}
         style={{background: `linear-gradient(to right, green 0%, #fff ${resistance}%`}} />
