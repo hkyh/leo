@@ -25,8 +25,101 @@ const { Step } = Steps;
 
 const { Header, Content, Sider, Footer } = Layout;
 
-const { Panel } = Collapse;
+const { Panel: AntPanel } = Collapse;
+
 const { Countdown } = Statistic;
+
+function Panel({children}) {
+  const inp1 = React.createRef()
+  const inp2 = React.createRef()
+  const inp3 = React.createRef()
+  // React.useLayoutEffect(() => {
+  //   let h = (inp) => (ev) => {
+  //     const rangePercent = ev.target.valueAsNumber
+  //     inp.current.style.background=`linear-gradient(to right, green 0%, #fff ${rangePercent}%)`;
+  //   }
+  //   let arr = [h(inp1),h(inp2),h(inp3)]
+  //   arr.map((e, i) => [inp1, inp2, inp3][i].current?.addEventListener('input', e))
+  //   return () => {
+  //     // inp1.current?.removeEventListener('input', h);
+  //     arr.map((e, i) => [inp1, inp2, inp3][i].current?.removeEventListener('input', e))
+  //   }
+  // }, [inp1, inp2, inp3])
+  const [end, setEnd] = React.useState(50)
+  const [food, setFood] = React.useState(50)
+  const [resistance, setResistance] = React.useState(50)
+  const handleSlider = (h) => ev => {
+    h(ev.target.valueAsNumber)
+  }
+  return (<>
+    <div class="panel__bars">
+      <div class="bar-text">hydration</div>
+      <div class="bar bar--hydration">
+        <div class="bar-fill" data-style="width: 50%"></div>
+      </div>
+      <div class="bar-text">hydration</div>
+      <div class="bar bar--hunger">
+        <div class="bar-fill" data-style="width: 50%"></div>
+      </div>
+      <div class="bar-text">hydration</div>
+      <div class="bar bar--stamina">
+        <div class="bar-fill" data-style="width: 50%"></div>
+      </div>
+    </div>
+    {children}
+    <div class="panel__ranges">
+      <label htmlFor="temp1">wydolność</label>
+      <input ref={inp1} class="range range--wydolnosc" type="range" id="temp1" name="temp" list="tickmarks"
+        value={end} onInput={handleSlider(setEnd)}
+        style={{linearGradient: `(to right, green 0%, #fff ${end}%`}} />
+      <label htmlFor="temp2">jedzenie</label>
+      <input ref={inp2} class="range range--jedzenie" type="range" id="temp2" name="temp" list="tickmarks"
+        value={food} onInput={handleSlider(setFood)}
+        style={{linearGradient: `(to right, green 0%, #fff ${food}%`}} />
+      <label htmlFor="temp3">odporność na glód</label>
+      <input ref={inp3} class="range range--odpornosc" type="range" id="temp3" name="temp" list="tickmarks"
+        value={resistance} onInput={handleSlider(setResistance)}
+        style={{linearGradient: `(to right, green 0%, #fff ${resistance}%`}} />
+      <pre>
+        {JSON.stringify({end, food, resistance}, null, 2)}
+      </pre>
+    </div>
+    </>)
+}
+
+function Controls() {
+  const [d, setD] = useState({v: 0});
+  return (<Panel>
+    <pre contentEditable={0 && true} onInput={ev => {
+      let txt = ev.target.textContent
+      // console.log('txt', txt)
+      setD(JSON.parse(txt))}
+    }>{JSON.stringify(d, null, 2)}</pre>
+  </Panel>);
+  const t = `
+  return (<>
+    <div>
+      <div class="section">
+        <Rate/>
+        <Tag color="volcano">volcano</Tag>
+        <Tooltip title="prompt text" color="orange" key="Orange">
+          <Button type="primary" onClick={() => setIsModalOpen(true)}>
+            Open Modal
+          </Button>
+        </Tooltip>
+          <Countdown title="Million Seconds" value={deadline} format="HH:mm:ss:SSS" />
+        <Chart>
+        {stat}
+        </Chart>
+        {modal}
+      </div>
+    {/* <Slider/> */}
+    {/* <Descriptions title="User Info">
+      <Descriptions.Item label="UserName">Zhou Maomao</Descriptions.Item>
+    </Descriptions> */}
+    </div>
+  </>)`
+}
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -409,21 +502,6 @@ function App() {
     }
   ]
   const [data, setData] = useState(() => data2);
-  const inp1 = React.createRef()
-  const inp2 = React.createRef()
-  const inp3 = React.createRef()
-  React.useLayoutEffect(() => {
-    let h = (inp) => (ev) => {
-      const rangePercent = ev.target.valueAsNumber
-      inp.current.style.background=`linear-gradient(to right, green 0%, #fff ${rangePercent}%)`;
-    }
-    let arr = [h(inp1),h(inp2),h(inp3)]
-    arr.map((e, i) => [inp1, inp2, inp3][i].current?.addEventListener('input', e))
-    return () => {
-      // inp1.current?.removeEventListener('input', h);
-      arr.map((e, i) => [inp1, inp2, inp3][i].current?.removeEventListener('input', e))
-    }
-  }, [inp1, inp2, inp3])
   const Component = React.useCallback(() => {
     const config = {
       data,
@@ -468,68 +546,37 @@ function App() {
       </Descriptions>
     </>)
   }
-  function Panel({children}) {
-    return (<>
-      <div class="panel__bars">
-        <div class="bar-text">hydration</div>
-        <div class="bar bar--hydration">
-          <div class="bar-fill" data-style="width: 50%"></div>
-        </div>
-        <div class="bar-text">hydration</div>
-        <div class="bar bar--hunger">
-          <div class="bar-fill" data-style="width: 50%"></div>
-        </div>
-        <div class="bar-text">hydration</div>
-        <div class="bar bar--stamina">
-          <div class="bar-fill" data-style="width: 50%"></div>
-        </div>
-      </div>
-      {children}
-      <div class="panel__ranges">
-        <label htmlFor="temp1">wydolność</label>
-        <input ref={inp1} class="range range--wydolnosc" type="range" id="temp1" name="temp" list="tickmarks" />
-        <label htmlFor="temp2">jedzenie</label>
-        <input ref={inp2} class="range range--jedzenie" type="range" id="temp2" name="temp" list="tickmarks" />
-        <label htmlFor="temp3">odporność na glód</label>
-        <input ref={inp3} class="range range--odpornosc" type="range" id="temp3" name="temp" list="tickmarks" />
-      </div></>)
-  }
-  function Controls() {
-    const [d, setD] = useState({v: 0});
-    return (<Panel>
-      <pre contentEditable={true} onInput={ev => {
-        let txt = ev.target.textContent
-        // console.log('txt', txt)
-        setD(JSON.parse(txt))}
-      }>{JSON.stringify(d, null, 2)}</pre>
-    </Panel>);
-    return (<>
-      <div>
-        <div class="section">
-          <Rate/>
-          <Tag color="volcano">volcano</Tag>
-          <Tooltip title="prompt text" color="orange" key="Orange">
-            <Button type="primary" onClick={() => setIsModalOpen(true)}>
-              Open Modal
-            </Button>
-          </Tooltip>
-            <Countdown title="Million Seconds" value={deadline} format="HH:mm:ss:SSS" />
-          <Chart>
-          {stat}
-          </Chart>
-          {modal}
-        </div>
-      {/* <Slider/> */}
-      {/* <Descriptions title="User Info">
-        <Descriptions.Item label="UserName">Zhou Maomao</Descriptions.Item>
-      </Descriptions> */}
-      </div>
-    </>)
-  }
   function Map() {
     return (<div className="game">
     </div>)
   }
+  const [x, setX] = React.useState(365)
+  const [y, setY] = React.useState(663)
+  const [dex, setDeX] = React.useState(250)
+  const [dey, setDeY] = React.useState(600)
+  React.useEffect(() => {
+    console.info('rereg')
+    const r = setInterval(() => {
+      const dd = Math.abs(dex-x)
+      if (dd > 2) {
+        // setX(x => x + (dex - x)/100.0)
+        let step = 1
+        if (dd > 100) step = dd/100
+        setX(x => x + ((dex - x) > 0 ? step : -step))
+      }
+      const ddy = Math.abs(dey-y)
+      if (ddy > 2) {
+        let step = 1
+        if (ddy > 100) step = ddy/100
+        // setY(y => y + (dey - y)/100.0)
+        setY(y => y + ((dey - y) > 0 ? step : -step))
+      }
+    }, 100)
+    return () => {
+      clearInterval(r)
+    }
+  }, [dex, dey, setX, setY, x, y])
+  // Sempre Verde, Dual Fuel
   const misc = (
     <div className="" style={{position: 'absolute', top: '50vh', left: '50vw'}}>
       <Spin size="large" />
@@ -541,14 +588,16 @@ function App() {
       <div class="container">
         <div class="africa-wrapper">
           <div class="africa">
-            {/* <AfricaSVG/> */}
-            <div dangerouslySetInnerHTML={{ __html: AfricaSVG }} />
+            <Africa setY={setY} setX={setX}/>
           </div>
-          <div class="ball"></div>
+          <div class="ball" style={{position: 'absolute', left: `${x}px`, top: `${y}px`}}></div>
         </div>
         <div class="panel">
           {/* <Panel/> */}
           <Controls/>
+          <input type="number" value={dex} onInput={({target: {valueAsNumber: v}}) => setDeX(v)} />/{x}
+          <br/>
+          <input type="number" value={dey} onInput={({target: {valueAsNumber: v}}) => setDeY(v)} />/{y}
         </div>
       </div>
     </section>
@@ -576,6 +625,47 @@ function App() {
       </Layout>
     // </div>
   );
+}
+
+function Africa({setY, setX}) {
+  const ref = React.createRef()
+  React.useLayoutEffect(() => {
+    if (!ref.current) return;
+    const svg = ref.current.querySelector(".africa svg");
+    let h1, h2, h3;
+    svg.addEventListener("mouseover", h1 = (ev) => {
+      console.log("ev", { el: ev.target, ev });
+      const id = ev.target.getAttribute("id");
+      const randomColor = ["red", "blue", "green", "yellow"][Math.floor(Math.random() * 4)];
+      //   const color = country2color[id];
+      const color = randomColor;
+      //   console.log(`['${id}']: "${color}"`);
+      //   ev.target.style.fill = `${color} !important`;
+      const style = ev.target.getAttribute("style");
+      //   ev.target.setAttribute("style", style.replace("fill:", "fill2:"));
+      ev.target.setAttribute("style", `fill:${color}`);
+      //   ev.target.setAttribute("fill", `${color}`);
+      //   setTimeout(() => ev.target.setAttribute("style", style), 500);
+    });
+    svg.addEventListener("mouseout", h2 = (ev) => {
+      ev.target.setAttribute("style", `fill:#cccccc;stroke:#000000`);
+    });
+    document.body.addEventListener('keyup', h3 = ev => {
+      ev.preventDefault()
+      // const el = document.querySelector('.ball')
+      // console.log('ev', ev, {el})
+      // el.style.top = `${parseInt(el.style.top || 400) - 1}px`
+      setY(y => y - 1)
+      // setX(y => y - 1)
+    })
+    return () => {
+      svg.removeEventListener('mouseover', h1);
+      svg.removeEventListener('mouseout', h2);
+      document.body.removeEventListener('keyup', h3)
+    }
+  }, [ref])
+
+    return (<div ref={ref} className='africa' dangerouslySetInnerHTML={{ __html: AfricaSVG }} />)
 }
 
 export default App;
