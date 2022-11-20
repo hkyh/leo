@@ -1,0 +1,143 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Reem Kufi", sans-serif;
+}
+
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.giraffe {
+  padding: 70px 0;
+  position: relative;
+  margin: 20px;
+  border-radius: 20px;
+}
+
+.giraffe .container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.africa-wrapper {
+    background: linear-gradient(180deg, rgba(176,206,255,1) 0%, rgba(138,180,248,1) 35%, rgba(110,163,250,1) 100%);
+  position: relative;
+  box-shadow: 5px 4px 20px -17px rgba(66, 68, 90, 1);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  padding: 50px 0;
+}
+
+.africa svg {
+  width: 70% !important;
+  height: initial;
+}
+
+.africa svg path {
+    /* fill: #cccccc; */
+}
+.africa svg path:hover {
+    /* fill: #339900 !important; */
+    /* fill: #339900; */
+}
+
+.ball {
+  position: absolute;
+  left: 50%;
+  bottom: 30px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #ffb300;
+}
+
+/* Panels */
+.panel {
+  width: 30%;
+  background-color: #dbdbdb;
+  padding: 30px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel input {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.panel__ranges {
+  text-align: center;
+}
+
+.range {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #c2c2c2;
+  /* outline: none; */
+  height: 10px;
+  border-radius: 10px;
+  background: linear-gradient(to right, green 0%, #fff 50%);
+}
+
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 23px;
+  height: 22px;
+  border: 0;
+  background: url("img/leaf.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-track {
+  background-color: #339900;
+}
+
+/* Bars */
+.panel__bars {
+  flex: 1;
+}
+
+.bar {
+  border-radius: 16px;
+  background-color: #f1f1f1;
+  min-height: 10px;
+  margin-bottom: 20px;
+  box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.25), -4px -4px 15px #ffffff;
+}
+
+.bar--hydration .bar-fill {
+  background-color: #2c9fe0;
+}
+
+.bar--hunger .bar-fill {
+  background-color: #339900;
+}
+
+.bar--stamina .bar-fill {
+  background-color: #cfa512;
+}
+
+.bar-fill {
+  border-radius: 16px;
+  color: #fff;
+  padding: 1px 10px;
+  min-height: 10px;
+}
+
+.bar-text {
+  text-align: center;
+  margin-bottom: 2px;
+}

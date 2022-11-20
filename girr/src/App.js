@@ -409,6 +409,21 @@ function App() {
     }
   ]
   const [data, setData] = useState(() => data2);
+  const inp1 = React.createRef()
+  const inp2 = React.createRef()
+  const inp3 = React.createRef()
+  React.useLayoutEffect(() => {
+    let h = (inp) => (ev) => {
+      const rangePercent = ev.target.valueAsNumber
+      inp.current.style.background=`linear-gradient(to right, green 0%, #fff ${rangePercent}%)`;
+    }
+    let arr = [h(inp1),h(inp2),h(inp3)]
+    arr.map((e, i) => [inp1, inp2, inp3][i].current?.addEventListener('input', e))
+    return () => {
+      // inp1.current?.removeEventListener('input', h);
+      arr.map((e, i) => [inp1, inp2, inp3][i].current?.removeEventListener('input', e))
+    }
+  }, [inp1, inp2, inp3])
   const Component = React.useCallback(() => {
     const config = {
       data,
@@ -471,16 +486,23 @@ function App() {
       </div>
       {children}
       <div class="panel__ranges">
-        <label for="temp">wydolność</label>
-        <input class="range range--wydolnosc" type="range" id="temp" name="temp" list="tickmarks" />
-        <label for="temp">jedzenie</label>
-        <input class="range range--jedzenie" type="range" id="temp" name="temp" list="tickmarks" />
-        <label for="temp">odporność na glód</label>
-        <input class="range range--odpornosc" type="range" id="temp" name="temp" list="tickmarks" />
+        <label htmlFor="temp1">wydolność</label>
+        <input ref={inp1} class="range range--wydolnosc" type="range" id="temp1" name="temp" list="tickmarks" />
+        <label htmlFor="temp2">jedzenie</label>
+        <input ref={inp2} class="range range--jedzenie" type="range" id="temp2" name="temp" list="tickmarks" />
+        <label htmlFor="temp3">odporność na glód</label>
+        <input ref={inp3} class="range range--odpornosc" type="range" id="temp3" name="temp" list="tickmarks" />
       </div></>)
   }
   function Controls() {
-    return <Panel/>;
+    const [d, setD] = useState({v: 0});
+    return (<Panel>
+      <pre contentEditable={true} onInput={ev => {
+        let txt = ev.target.textContent
+        // console.log('txt', txt)
+        setD(JSON.parse(txt))}
+      }>{JSON.stringify(d, null, 2)}</pre>
+    </Panel>);
     return (<>
       <div>
         <div class="section">
@@ -525,7 +547,8 @@ function App() {
           <div class="ball"></div>
         </div>
         <div class="panel">
-          <Panel/>
+          {/* <Panel/> */}
+          <Controls/>
         </div>
       </div>
     </section>
