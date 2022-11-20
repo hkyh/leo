@@ -80,9 +80,9 @@ function Panel({children, state, status, end, setEnd}) {
       <input ref={inp3} class="range range--odpornosc" type="range" id="temp3" name="temp" list="tickmarks"
         value={resistance} onInput={handleSlider(setResistance)}
         style={{background: `linear-gradient(to right, green 0%, #fff ${resistance}%`}} />
-      <pre>
+      {undefined && <pre>
         {JSON.stringify({end, food, resistance}, null, 2)}
-      </pre>
+      </pre>}
     </div>
     </>)
 }
@@ -163,6 +163,9 @@ function Controls({state, status, setStatus, setState, reload, playerId, setPlay
       // console.log('txt', txt)
       setD(JSON.parse(txt))}
     }>{JSON.stringify(d, null, 2)}</pre>}
+    {(status.hunger == 100 || status.hydration == 0) && <Modal open={1} onOk={() => {
+      window.location.href = window.location.href
+    }}>Przegrałeś.<br/>Zagraj ponownie?</Modal>}
   </Panel>);
   const t = `
   return (<>
@@ -710,9 +713,9 @@ function App() {
             reload={load}
             playerId={playerId}
             setPlayerId={setPlayerId}/>
-          <input type="number" value={dex} onInput={({target: {valueAsNumber: v}}) => setDeX(v)} />/{x}
+          {/* <input type="number" value={dex} onInput={({target: {valueAsNumber: v}}) => setDeX(v)} />/{x}
           <br/>
-          <input type="number" value={dey} onInput={({target: {valueAsNumber: v}}) => setDeY(v)} />/{y}
+          <input type="number" value={dey} onInput={({target: {valueAsNumber: v}}) => setDeY(v)} />/{y} */}
         </div>
       </div>
     </section>
