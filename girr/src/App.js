@@ -555,20 +555,21 @@ function App() {
   const [dex, setDeX] = React.useState(250)
   const [dey, setDeY] = React.useState(600)
   React.useEffect(() => {
-    console.info('rereg')
+    // console.info('rereg')
     const r = setInterval(() => {
       const dd = Math.abs(dex-x)
+      const DD = 33;
       if (dd > 2) {
-        // setX(x => x + (dex - x)/100.0)
+        // setX(x => x + (dex - x)/DD)
         let step = 1
-        if (dd > 100) step = dd/100
+        if (dd > DD) step = dd/DD
         setX(x => x + ((dex - x) > 0 ? step : -step))
       }
       const ddy = Math.abs(dey-y)
       if (ddy > 2) {
         let step = 1
-        if (ddy > 100) step = ddy/100
-        // setY(y => y + (dey - y)/100.0)
+        if (ddy > DD) step = ddy/DD
+        // setY(y => y + (dey - y)/DD)
         setY(y => y + ((dey - y) > 0 ? step : -step))
       }
     }, 100)
@@ -588,7 +589,7 @@ function App() {
       <div class="container">
         <div class="africa-wrapper">
           <div class="africa">
-            <Africa setY={setY} setX={setX}/>
+            <Africa setY={setY} setX={setX} setDeX={setDeX} setDeY={setDeY}/>
           </div>
           <div class="ball" style={{position: 'absolute', left: `${x}px`, top: `${y}px`}}></div>
         </div>
@@ -627,12 +628,12 @@ function App() {
   );
 }
 
-function Africa({setY, setX}) {
+function Africa({setY, setX, setDeX, setDeY}) {
   const ref = React.createRef()
   React.useLayoutEffect(() => {
     if (!ref.current) return;
     const svg = ref.current.querySelector(".africa svg");
-    let h1, h2, h3;
+    let h1, h2, h3, h4;
     svg.addEventListener("mouseover", h1 = (ev) => {
       console.log("ev", { el: ev.target, ev });
       const id = ev.target.getAttribute("id");
@@ -658,10 +659,19 @@ function Africa({setY, setX}) {
       setY(y => y - 1)
       // setX(y => y - 1)
     })
+    svg.addEventListener("click", h4 = (ev) => {
+      console.log('h')
+      const {x, y, width: w, height: h} = ev.target.getBoundingClientRect()
+      const dx = 589-200
+      const dy = 228-150
+      setDeX(x + w/2 - dx)
+      setDeY(y + h/2 - dy)
+    })
     return () => {
       svg.removeEventListener('mouseover', h1);
       svg.removeEventListener('mouseout', h2);
       document.body.removeEventListener('keyup', h3)
+      svg.removeEventListener('click', h4)
     }
   }, [ref])
 

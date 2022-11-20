@@ -32,3 +32,25 @@
   min-width: 75vh;
   background-color: azure;
 }
+
+.container.is-3d {
+  transform-style: preserve-3d;
+  perspective: 731px;
+}
+
+.is-3d .africa-wrapper {
+  /* transform: translate3d(1px, -89px, -254px) rotateX(33deg); */
+  -webkit-animation:spin 1.5s linear forwards;
+  -moz-animation:spin 1.5s linear forwards;
+  animation:spin 1.5s linear forwards;
+}
+
+@keyframes spin {
+  0% {
+    transform: translate3d(0px, 0px, 0px) rotateX(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: translate3d(1px, -35px, -254px) rotateX(33deg);
+  }
+}
