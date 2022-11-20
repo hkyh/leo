@@ -19,6 +19,7 @@ import { Line } from '@ant-design/plots';
 import { Descriptions, Tag, Divider } from 'antd';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import AfricaSVG from '!!raw-loader!./Africa.svg';
+import buildApiClient from './api';
 // import AfricaSVG from 'raw-loader!./Africa';
 
 const { Step } = Steps;
@@ -29,7 +30,7 @@ const { Panel: AntPanel } = Collapse;
 
 const { Countdown } = Statistic;
 
-function Panel({children}) {
+function Panel({children, state, status, end, setEnd}) {
   const inp1 = React.createRef()
   const inp2 = React.createRef()
   const inp3 = React.createRef()
@@ -45,7 +46,6 @@ function Panel({children}) {
   //     arr.map((e, i) => [inp1, inp2, inp3][i].current?.removeEventListener('input', e))
   //   }
   // }, [inp1, inp2, inp3])
-  const [end, setEnd] = React.useState(50)
   const [food, setFood] = React.useState(50)
   const [resistance, setResistance] = React.useState(50)
   const handleSlider = (h) => ev => {
@@ -53,33 +53,33 @@ function Panel({children}) {
   }
   return (<>
     <div class="panel__bars">
-      <div class="bar-text">hydration</div>
+      <div class="bar-text">nawodnienie</div>
       <div class="bar bar--hydration">
-        <div class="bar-fill" data-style="width: 50%"></div>
+        <div class="bar-fill" data-style="width: 50%" style={{width: `${status.hydration}%`}}></div>
       </div>
-      <div class="bar-text">hydration</div>
+      <div class="bar-text">głód</div>
       <div class="bar bar--hunger">
-        <div class="bar-fill" data-style="width: 50%"></div>
+        <div class="bar-fill" data-style="width: 50%" style={{width: `${status.hunger}%`}}></div>
       </div>
-      <div class="bar-text">hydration</div>
+      <div class="bar-text">wytrzymałość</div>
       <div class="bar bar--stamina">
-        <div class="bar-fill" data-style="width: 50%"></div>
+        <div class="bar-fill" data-style="width: 50%" style={{width: `${status.stamina}%`}}></div>
       </div>
     </div>
     {children}
     <div class="panel__ranges">
-      <label htmlFor="temp1">wydolność</label>
+      <label htmlFor="temp1">szybkość</label>
       <input ref={inp1} class="range range--wydolnosc" type="range" id="temp1" name="temp" list="tickmarks"
         value={end} onInput={handleSlider(setEnd)}
-        style={{linearGradient: `(to right, green 0%, #fff ${end}%`}} />
+        style={{background: `linear-gradient(to right, green 0%, #fff ${end}%`}} />
       <label htmlFor="temp2">jedzenie</label>
       <input ref={inp2} class="range range--jedzenie" type="range" id="temp2" name="temp" list="tickmarks"
         value={food} onInput={handleSlider(setFood)}
-        style={{linearGradient: `(to right, green 0%, #fff ${food}%`}} />
-      <label htmlFor="temp3">odporność na glód</label>
+        style={{background: `linear-gradient(to right, green 0%, #fff ${food}%`}} />
+      <label htmlFor="temp3">odporność na glód</label>{resistance}
       <input ref={inp3} class="range range--odpornosc" type="range" id="temp3" name="temp" list="tickmarks"
         value={resistance} onInput={handleSlider(setResistance)}
-        style={{linearGradient: `(to right, green 0%, #fff ${resistance}%`}} />
+        style={{background: `linear-gradient(to right, green 0%, #fff ${resistance}%`}} />
       <pre>
         {JSON.stringify({end, food, resistance}, null, 2)}
       </pre>
@@ -87,14 +87,82 @@ function Panel({children}) {
     </>)
 }
 
-function Controls() {
+function Controls({state, status, setStatus, setState, reload, playerId, setPlayerId, reset}) {
   const [d, setD] = useState({v: 0});
-  return (<Panel>
-    <pre contentEditable={0 && true} onInput={ev => {
+  const [oasis, setOasis] = useState(false);
+  const [leaves, setLeaves] = useState(false);
+  const [canDrink, setCanDrink] = useState(false);
+  const [canEat, setCanEat] = useState(false);
+  const [end, setEnd] = React.useState(50)
+  const [round, setRound] = React.useState(1)
+  const nextRound = () => {
+    setRound(r => r+1)
+    const chance = end > 50 ? .2 : .5;
+    // setOasis(Math.random() < chance)
+    // debugger
+    const val = Math.random()
+    const foundWater = val < chance
+    console.info('status', status, {foundWater, val, chance})
+    setCanDrink(foundWater)
+    // setLeaves(Math.random() < .5)
+    setCanEat(status.hunger > 0 && Math.random() < .5)
+    // setLeaves(Math.random() < .5)
+    setStatus(s => {
+      const status = {
+        ...s,
+        hydration: (s.hydration || 100) - 2,
+        hunger: (s.hunger || 0) + (s.hunger < 100 ? 1 : 0),
+      }
+      console.info('status', status)
+      return status
+    })
+  }
+  React.useEffect(() => {
+    const h22 = setInterval(() => {
+      nextRound()
+    }, 2000)
+    return () => {
+      clearInterval(h22)
+    }
+  }, [setOasis, setCanDrink, setLeaves, setCanEat, state, status, setState])
+  const join = (id) => {
+    api.requestPlayer(id).then(r => {
+      setPlayerId(r['yourPlayerId'])
+    })
+    reload()
+  }
+  const drink = () => setStatus(s => {
+    return {...s, hydration: s.hydration + 3}
+  })
+  const eat = () => setStatus(s => {
+    return {...s, hunger: s.hunger - 1}
+  })
+  return (<Panel state={state} status={status} setStatus={setStatus} end={end} setEnd={setEnd}>
+    <div>
+      <Button onClick={nextRound}>Następna runda</Button>
+      &nbsp;Runda: {round}
+      <br/>
+      <div>Szansa na wodę: {end > 50 ? 20 : 50}%</div>
+    </div>
+    {(playerId && (!state.playerA || !state.playerB) && <div class="flex" style={{display: 'flex'}}>
+      <Button onClick={() => join(1)} disabled={state.playerA}>{state.playerA ? 'Gracz 1 OK' : 'Dołącz jako gracz 1'}</Button>
+      <Button onClick={() => join(2)} disabled={state.playerB}>{state.playerB ? 'Gracz 2 OK' : 'Dołącz jako gracz 2'}</Button>
+    </div>) || <>
+      <div>Trwa rozgrywka...</div>
+      <Button onClick={reset}>Resetuj</Button>
+    </>}
+    <div class="flex" style={{minHeight: '70px'}}>
+      {canDrink && <Button onClick={drink} disabled={!canDrink}>pij</Button>}
+      {canEat && <Button onClick={eat} disabled={!canEat}>zjedz</Button>}
+      {(!canDrink) && (!canEat) && <Button disabled={true}>
+        Nie ma oazy ani liści
+      </Button>}
+    </div>
+    {undefined && <pre contentEditable={0 && true} onInput={ev => {
       let txt = ev.target.textContent
       // console.log('txt', txt)
       setD(JSON.parse(txt))}
-    }>{JSON.stringify(d, null, 2)}</pre>
+    }>{JSON.stringify(d, null, 2)}</pre>}
   </Panel>);
   const t = `
   return (<>
@@ -120,6 +188,8 @@ function Controls() {
     </div>
   </>)`
 }
+
+const api = buildApiClient()
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -552,8 +622,20 @@ function App() {
   }
   const [x, setX] = React.useState(365)
   const [y, setY] = React.useState(663)
-  const [dex, setDeX] = React.useState(440)
-  const [dey, setDeY] = React.useState(175)
+  const [dex, setDeX] = React.useState(365)
+  const [dey, setDeY] = React.useState(663)
+  const [playerId, setPlayerId] = React.useState(undefined)
+  const [state, setState] = React.useState()
+  const [status, setStatus] = React.useState({hydration: 100, hunger: 0, stamina: 100})
+  function load() {
+    return api.getState().then(gs => {
+      console.log('gamestate', gs)
+      setState(gs)
+    })
+  }
+  React.useEffect(() => {
+    load()
+  }, [])
   React.useEffect(() => {
     // console.info('rereg')
     const r = setInterval(() => {
@@ -619,7 +701,15 @@ function App() {
         </div>
         <div class="panel">
           {/* <Panel/> */}
-          <Controls/>
+          {/* <Component/> useRef error */}
+          <Controls
+            status={status}
+            setStatus={setStatus}
+            setState={setState}
+            state={state}
+            reload={load}
+            playerId={playerId}
+            setPlayerId={setPlayerId}/>
           <input type="number" value={dex} onInput={({target: {valueAsNumber: v}}) => setDeX(v)} />/{x}
           <br/>
           <input type="number" value={dey} onInput={({target: {valueAsNumber: v}}) => setDeY(v)} />/{y}
