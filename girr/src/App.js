@@ -552,23 +552,25 @@ function App() {
   }
   const [x, setX] = React.useState(365)
   const [y, setY] = React.useState(663)
-  const [dex, setDeX] = React.useState(250)
-  const [dey, setDeY] = React.useState(600)
+  const [dex, setDeX] = React.useState(440)
+  const [dey, setDeY] = React.useState(175)
   React.useEffect(() => {
     // console.info('rereg')
     const r = setInterval(() => {
       const dd = Math.abs(dex-x)
       const DD = 33;
-      if (dd > 2) {
+      if (dd > 5) {
         // setX(x => x + (dex - x)/DD)
         let step = 1
-        if (dd > DD) step = dd/DD
+        // if (dd > DD)
+        step = dd/DD
         setX(x => x + ((dex - x) > 0 ? step : -step))
       }
       const ddy = Math.abs(dey-y)
-      if (ddy > 2) {
+      if (ddy > 5) {
         let step = 1
-        if (ddy > DD) step = ddy/DD
+        // if (ddy > DD)
+        step = ddy/DD
         // setY(y => y + (dey - y)/DD)
         setY(y => y + ((dey - y) > 0 ? step : -step))
       }
@@ -588,10 +590,32 @@ function App() {
     <section class="giraffe">
       <div class="container">
         <div class="africa-wrapper">
+          <div class="map-objects">
+            <div class="oasis-1">
+              <img src="./Żyrafa/oaza.png"/>
+            </div>
+            <div class="oasis-1a">
+              <img src="./Żyrafa/oaza.png"/>
+            </div>
+            <div class="oasis-2">
+              <img src="./Żyrafa 2/skałka z wodą.png"/>
+            </div>
+            <div class="shelter-1">
+              <img src="./Żyrafa/schronienie.png"/>
+            </div>
+            <div class="stone-1">
+              <img src="./Żyrafa/skałka1.png"/>
+            </div>
+            <div class="stone-2">
+              <img src="./Żyrafa/skałka2.png"/>
+            </div>
+          </div>
           <div class="africa">
             <Africa setY={setY} setX={setX} setDeX={setDeX} setDeY={setDeY}/>
           </div>
-          <div class="ball" style={{position: 'absolute', left: `${x}px`, top: `${y}px`}}></div>
+          <div class="ball" style={{position: 'absolute', left: `${x}px`, top: `${y}px`}}>
+            <img src="./Żyrafa/krop.png"/>
+          </div>
         </div>
         <div class="panel">
           {/* <Panel/> */}

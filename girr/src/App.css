@@ -54,3 +54,71 @@
     transform: translate3d(1px, -35px, -254px) rotateX(33deg);
   }
 }
+
+.map-objects {
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+.map-objects > div {
+  position: absolute;
+}
+
+.map-objects img {
+  /* max-width: 120px; */
+  object-fit: cover;
+}
+
+.stone-2 {
+  left: 268px;
+  top: 286px;
+  left: 303px;
+  top: 385px;
+}
+.stone-2 img {
+  height: 101px;
+}
+.stone-1 {
+  left: 275px;
+  top: 229px;
+}
+.stone-1 img {
+  height: 67px;
+  transform: scaleX(-1);
+}
+.oasis-2 {
+  /* left: 296px;
+  top: 319px; */
+  left: 403px;
+  top: 302px;
+}
+.oasis-2 img {
+  height: 69px;
+}
+.oasis-1 {
+  left: 138px;
+  top: 213px;
+}
+.oasis-1a {
+  left: 376px;
+  top: 151px;
+  left: 343px;
+  top: 126px;
+}
+.oasis-1 img, .oasis-1a img {
+  height: 65px;
+}
+.shelter-1 {
+  left: 101px;
+  top: 108px;
+}
+.shelter-1 img {
+  height: 65px;
+}
+.ball img {
+  height: 140px;
+  position: relative;
+  left: -35px;
+  top: -142px;
+}
