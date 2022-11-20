@@ -17,6 +17,9 @@ import {
 import * as Icon from '@ant-design/icons';
 import { Line } from '@ant-design/plots';
 import { Descriptions, Tag, Divider } from 'antd';
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import AfricaSVG from '!!raw-loader!./Africa.svg';
+// import AfricaSVG from 'raw-loader!./Africa';
 
 const { Step } = Steps;
 
@@ -431,7 +434,7 @@ function App() {
     {children}
     {/* <Component/> */}
   </Popover>)
-  
+
   const Slider = () => {
     const [inputValue, setInputValue] = useState(1);
     const onChange = (newValue) => {
@@ -450,24 +453,55 @@ function App() {
       </Descriptions>
     </>)
   }
-  function Controls() {
+  function Panel({children}) {
     return (<>
-      <Rate/>
-      <Tag color="volcano">volcano</Tag>
-      <Tooltip title="prompt text" color="orange" key="Orange">
-        <Button type="primary" onClick={() => setIsModalOpen(true)}>
-          Open Modal
-        </Button>
-      </Tooltip>
-        <Countdown title="Million Seconds" value={deadline} format="HH:mm:ss:SSS" />
-      <Chart>
-      {stat}
-      </Chart>
-      {modal}
-      <Slider/>
+      <div class="panel__bars">
+        <div class="bar-text">hydration</div>
+        <div class="bar bar--hydration">
+          <div class="bar-fill" data-style="width: 50%"></div>
+        </div>
+        <div class="bar-text">hydration</div>
+        <div class="bar bar--hunger">
+          <div class="bar-fill" data-style="width: 50%"></div>
+        </div>
+        <div class="bar-text">hydration</div>
+        <div class="bar bar--stamina">
+          <div class="bar-fill" data-style="width: 50%"></div>
+        </div>
+      </div>
+      {children}
+      <div class="panel__ranges">
+        <label for="temp">wydolność</label>
+        <input class="range range--wydolnosc" type="range" id="temp" name="temp" list="tickmarks" />
+        <label for="temp">jedzenie</label>
+        <input class="range range--jedzenie" type="range" id="temp" name="temp" list="tickmarks" />
+        <label for="temp">odporność na glód</label>
+        <input class="range range--odpornosc" type="range" id="temp" name="temp" list="tickmarks" />
+      </div></>)
+  }
+  function Controls() {
+    return <Panel/>;
+    return (<>
+      <div>
+        <div class="section">
+          <Rate/>
+          <Tag color="volcano">volcano</Tag>
+          <Tooltip title="prompt text" color="orange" key="Orange">
+            <Button type="primary" onClick={() => setIsModalOpen(true)}>
+              Open Modal
+            </Button>
+          </Tooltip>
+            <Countdown title="Million Seconds" value={deadline} format="HH:mm:ss:SSS" />
+          <Chart>
+          {stat}
+          </Chart>
+          {modal}
+        </div>
+      {/* <Slider/> */}
       {/* <Descriptions title="User Info">
         <Descriptions.Item label="UserName">Zhou Maomao</Descriptions.Item>
       </Descriptions> */}
+      </div>
     </>)
   }
   function Map() {
@@ -479,6 +513,23 @@ function App() {
       <Spin size="large" />
     </div>)
       // {misc}
+  // console.log('html', AfricaSVG)
+  return (<>
+    <section class="giraffe">
+      <div class="container">
+        <div class="africa-wrapper">
+          <div class="africa">
+            {/* <AfricaSVG/> */}
+            <div dangerouslySetInnerHTML={{ __html: AfricaSVG }} />
+          </div>
+          <div class="ball"></div>
+        </div>
+        <div class="panel">
+          <Panel/>
+        </div>
+      </div>
+    </section>
+  </>)
   return (
     // <div className="App">
       <Layout>
