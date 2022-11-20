@@ -144,7 +144,7 @@ function Controls({state, status, setStatus, setState, reload, playerId, setPlay
       <br/>
       <div>Szansa na wodę: {end > 50 ? 20 : 50}%</div>
     </div>
-    {(playerId && (!state.playerA || !state.playerB) && <div class="flex" style={{display: 'flex'}}>
+    {(!playerId && state && (!state.playerA || !state.playerB) && <div class="flex" style={{display: 'flex'}}>
       <Button onClick={() => join(1)} disabled={state.playerA}>{state.playerA ? 'Gracz 1 OK' : 'Dołącz jako gracz 1'}</Button>
       <Button onClick={() => join(2)} disabled={state.playerB}>{state.playerB ? 'Gracz 2 OK' : 'Dołącz jako gracz 2'}</Button>
     </div>) || <>
@@ -711,6 +711,7 @@ function App() {
             setState={setState}
             state={state}
             reload={load}
+            reset={() => setPlayerId(undefined)}
             playerId={playerId}
             setPlayerId={setPlayerId}/>
           {/* <input type="number" value={dex} onInput={({target: {valueAsNumber: v}}) => setDeX(v)} />/{x}

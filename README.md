@@ -1,6 +1,6 @@
 # Leo the Girraffe
 
-Kod aplikacji znajduje się
+Główny kod aplikacji znajduje się w `src/App.js`.
 
 Gra o żyrafie, która wbrew swojej woli znalazła się na południu kontynentu, zdala od żyrafiej rodziny, która od pokoleń żyje na północy.
 
@@ -30,4 +30,4 @@ Rozwój umiejętności długoterminowego planowania, inwestowania w rozwój i po
 * Asia K.
 * Alicja K.
 
-HackYeah! 2022, Kraków
+Kraków, HackYeah! 2022
